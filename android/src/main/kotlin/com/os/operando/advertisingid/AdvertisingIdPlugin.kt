@@ -1,5 +1,7 @@
 package com.os.operando.advertisingid
 
+import android.os.Handler
+import android.os.Looper
 import com.google.android.gms.ads.identifier.AdvertisingIdClient
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler
@@ -23,11 +25,11 @@ class AdvertisingIdPlugin(private val registrar: Registrar) : MethodCallHandler 
             "getAdvertisingId" -> thread {
                 try {
                     val id = AdvertisingIdClient.getAdvertisingIdInfo(registrar.context()).id
-                    registrar.activity().runOnUiThread {
+                    Handler(Looper.getMainLooper()).post {
                         result.success(id)
                     }
                 } catch (e: Exception) {
-                    registrar.activity().runOnUiThread {
+                    Handler(Looper.getMainLooper()).post {
                         result.error(e.javaClass.canonicalName, e.localizedMessage, null)
                     }
                 }
